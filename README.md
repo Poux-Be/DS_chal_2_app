@@ -1,2 +1,2 @@
-# first_streamlit_app
-Streamlit app for a Snowflake course
+# D&A Challenge - 2
+Streamlit app for a D&A challenge
