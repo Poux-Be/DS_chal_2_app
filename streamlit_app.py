@@ -2,6 +2,7 @@
 
 # ----- Imports -----
 import os
+from xml.etree.ElementInclude import LimitedRecursiveIncludeError
 import requests
 import streamlit
 import snowflake.connector
@@ -30,10 +31,16 @@ def get_fruityvice_data(this_fruit_choice):
 
     return(fruityvice_normalized)
 
-# Fetch the fruit list from Snowflake
+# Fetch Snowflake data
 def get_table(table_name):
     with my_cnx.cursor() as my_cur:
-        my_cur.execute("select * from "+table_name)
+        my_cur.execute("select * from "+table_name+" limit 20")
+        return (my_cur.fetchall())
+
+# Fetch Snowflake data headers
+def get_table_header(table_name):
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("select * from information_schema.columns where table_name = "+table_name)
         return (my_cur.fetchall())
 
 # Add a row into Snowflake
@@ -53,8 +60,9 @@ streamlit.header('Data received')
 if streamlit.button("Get the intial data"):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows = get_table("sales")
+    my_data_headers = get_table_header("sales")
     my_cnx.close()
-    streamlit.dataframe(my_data_rows)
+    streamlit.dataframe(my_data_rows, columns=my_data_headers)
 
 
 # Don't run anything past here while troubleshooting
