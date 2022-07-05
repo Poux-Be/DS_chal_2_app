@@ -61,8 +61,9 @@ if streamlit.button("Get the intial data"):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows = get_table("sales")
     my_data_headers = get_table_header("sales")
+    print(my_data_headers)
     my_cnx.close()
-    streamlit.dataframe(my_data_rows, columns=my_data_headers)
+    streamlit.dataframe(my_data_rows)
 
 
 # Don't run anything past here while troubleshooting
