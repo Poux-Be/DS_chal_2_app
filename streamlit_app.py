@@ -47,8 +47,8 @@ streamlit.title("D&A Challenge - 2")
 
 # Simple menu
 streamlit.header('Data received')
+
 # Query snowflake
-streamlit.header("The fruit list contains:")
 # Add a button to query the fruit list
 if streamlit.button("Get the intial data"):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
