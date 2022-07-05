@@ -44,14 +44,17 @@ def insert_row_snowflake(new_fruit):
         return('Thanks for adding ' + add_my_fruit)
 
 # ----- Main display -----
-streamlit.title("My Parents New Healthy Diner")
+streamlit.title("D&A Challenge - 2")
 
 # Simple menu
-streamlit.header('Breakfast Menu')
-streamlit.text('🥣 Omega 3 & Blueberry Oatmeal')
-streamlit.text('🥗 Kale, Spinach & Rocket Smoothie')
-streamlit.text('🐔 Hard-Boiled Free-Range Egg')
-streamlit.text(" 🥑🍞 Avocado Toast")
+streamlit.header('Data received')
+
+
+# Don't run anything past here while troubleshooting
+streamlit.stop()
+
+
+# ---------- PREVIOUS CODE ---------- 
 
 streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 # Let's put a pick list here so they can pick the fruit they want to include 
@@ -77,8 +80,7 @@ try:
 except URLError as e:
     streamlit.error()
 
-# Don't run anything past here while troubleshooting
-#streamlit.stop()
+
 
 # Query snowflake
 streamlit.header("The fruit list contains:")
