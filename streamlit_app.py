@@ -89,7 +89,7 @@ with my_cnx.cursor() as my_cur:
 
 st.text(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartment']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
 my_cnx.close()
-st.bar_chart(my_query_results)
+st.dataframe(my_query_results)
 
 
 # Don't run anything past here while troubleshooting
