@@ -39,17 +39,19 @@ def get_table(table_name):
         df = pd.DataFrame(my_cur.fetchall(), columns = header)
         return (df)
 
-# Fetch Snowflake data headers
-def get_table_header(table_name):
+def get_table_with_conditions_on_(table_name, **):
     with my_cnx.cursor() as my_cur:
-        my_cur.execute("select COLUMN_NAME from information_schema.columns where table_name = '"+table_name.upper()+"'")
-        return (my_cur.fetchall())
+        my_cur.execute("select * from "+table_name+" limit 20")
+        header = [x[0] for x in my_cur.description]
+        df = pd.DataFrame(my_cur.fetchall(), columns = header)
+        return (df)
 
 # Add a row into Snowflake
 def insert_row_snowflake(new_fruit):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("insert into fruit_load_list values ('"+new_fruit+"')")
         return('Thanks for adding ' + add_my_fruit)
+
 
 # ----- Main display -----
 streamlit.title("D&A Challenge - 2")
@@ -65,6 +67,17 @@ if streamlit.button("Get the intial data"):
     my_table = get_table("sales")
     my_cnx.close()
     streamlit.dataframe(my_table)
+
+# Frist exercise, query the data to count the number of appartmen sold between two dates
+streamlit.header('Frist query: ')
+
+my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+with my_cnx.cursor() as my_cur:
+    my_cur.execute("select * from sales where (transaction_date >= '2020-02-03' and local_type='Appartement') limit 20")
+    header = [x[0] for x in my_cur.description]
+    my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
+my_cnx.close()
+streamlit.dataframe(my_query_results)
 
 
 # Don't run anything past here while troubleshooting
