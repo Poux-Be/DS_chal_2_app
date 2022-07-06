@@ -35,7 +35,7 @@ def get_fruityvice_data(this_fruit_choice):
 def get_table(table_name):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("select * from "+table_name+" limit 20")
-        header = my_cur.description
+        header = [x[0] for x in my_cur.description]
         df = pd.DataFrame(my_cur.fetchall(), columns = header)
         return (df)
 
@@ -56,6 +56,7 @@ streamlit.title("D&A Challenge - 2")
 
 # Simple menu
 streamlit.header('Data received')
+streamlit.text('Here is a snapshot of the data provided for this exercise.')
 
 # Query snowflake
 # Add a button to query the fruit list
