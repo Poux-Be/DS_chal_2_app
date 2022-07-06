@@ -93,7 +93,7 @@ my_cnx.close()
 
 #dataframe formatting to have a beautiful chart
 chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE'])
-st.dataframe(chart_df)
+st.bar_chart(chart_df)
 
 
 # Don't run anything past here while troubleshooting
