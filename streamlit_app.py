@@ -16,8 +16,10 @@ import plotly.express as px
 
 
 from urllib.error import URLError
+# ------------------------
+# ------ Main code -------
+# ------------------------
 
-# ----- Main code -----
 # Variables
 PATH = os.getcwd()
 
@@ -58,11 +60,12 @@ def insert_row_snowflake(new_fruit):
         my_cur.execute("insert into fruit_load_list values ('"+new_fruit+"')")
         return('Thanks for adding ' + add_my_fruit)
 
-
+# ------------------------
 # ----- Main display -----
-st.title("D&A Challenge - 2")
+# ------------------------
+st.title("🎅 D&A Challenge - 2 🎅")
 
-# Simple menu
+# Display the data received in a dataframe
 st.header('Data received')
 st.text('Here is a snapshot of the data provided for this exercise.')
 
@@ -74,34 +77,47 @@ if st.button("Display the intial data"):
     my_cnx.close()
     st.dataframe(my_table)
 
+# ------------------------
 # Frist exercise, query the data to count the number of appartments sold between two dates
-st.header('Frist query: Appartment sales between two dates')
+# ------------------------
+# Exercise title
+st.header('Frist query: Appartment sales between two dates 📆')
+
+# Select the first date
 d1 = st.date_input(
      "Study period first day",
      datetime.date(2019, 12, 31))
 
+# Select the second date
 d2 = st.date_input(
      "Study period last day",
      datetime.date(2020, 4, 1))
 
+# Query snowflake
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select transaction_date, local_type, sum(count(*)) over (partition by transaction_date, local_type) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 
-#answer the exercise question
+# Answer the exercise question
 st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartement']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
 my_cnx.close()
 
-#dataframe formatting to have a beautiful chart
+# Dataframe formatting to have a beautiful chart
 fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", color="LOCAL_TYPE", title="Daily sales from the "+d1.strftime('%Y-%m-%d')+" to the "+d2.strftime('%Y-%m-%d')+" per local type")
 fig.show()
 
 st.plotly_chart(fig)
 
+
+# ------------------------
 # Second exercise, get the ratio of sales per room number
-st.header('Second query: Appartment sales per room number')
+# ------------------------
+# Exercise title
+st.header('Second query: Appartment sales per room number #️⃣')
+
+# Query snowflake
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales where local_type='Appartement' group by rooms_number order by rooms_number asc")
@@ -109,10 +125,26 @@ with my_cnx.cursor() as my_cur:
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
 
-#answer the exercise question
+# Answer the exercise question
 fig2 = px.pie(my_query_results, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number')
 fig2.show()
 st.plotly_chart(fig2)
+
+
+# ------------------------
+# Third exercise, get the top 10 higher-priced regions
+# ------------------------
+# Exercise title
+st.header('Thrid query: Average price per squarred meter per department 💵')
+my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+with my_cnx.cursor() as my_cur:
+    my_cur.execute("select dept_code, average(transaction_value/carrez_surface) over (partition by dept_code) as sqm_price_average from sales group by dept_code order by sqm_price_average desc")
+    header = [x[0] for x in my_cur.description]
+    my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
+my_cnx.close()
+
+#answer the exercise question
+st.dataframe(my_query_results)
 
 
 # Don't run anything past here while troubleshooting
