@@ -84,7 +84,6 @@ d2 = st.date_input(
      datetime.date(2020, 4, 1))
 
 
-
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select transaction_date, local_type, count(*) over (partition by transaction_date) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
@@ -100,7 +99,7 @@ fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", colo
 fig.show()
 #chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
 #chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
-st.pyplot(fig)
+st.pyplot(fig.figure)
 
 
 # Don't run anything past here while troubleshooting
