@@ -96,7 +96,7 @@ d2 = st.date_input(
 # Query snowflake
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select transaction_date, local_type, sum(count(*)) over (partition by transaction_date, local_type) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
+    my_cur.execute("select transaction_date, local_type, sum(count(*)) over (partition by transaction_date, local_type) as daily_sales_count from sales_view where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 
@@ -120,7 +120,7 @@ st.header('Second query: Appartment sales per room number #️⃣')
 # Query snowflake
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales where local_type='Appartement' group by rooms_number order by rooms_number asc")
+    my_cur.execute("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales_view where local_type='Appartement' group by rooms_number order by rooms_number asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
@@ -136,9 +136,11 @@ st.plotly_chart(fig2)
 # ------------------------
 # Exercise title
 st.header('Thrid query: Average price per squarred meter per department 💵')
+
+# Snowflake query
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select dept_code, average(transaction_value/carrez_surface) over (partition by dept_code) as sqm_price_average from sales group by dept_code order by sqm_price_average desc")
+    my_cur.execute("select dept_code, average(transaction_value/carrez_surface) over (partition by dept_code) as sqm_price_average from sales_view group by dept_code order by sqm_price_average desc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
