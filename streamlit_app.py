@@ -80,6 +80,8 @@ d2 = st.date_input(
      datetime.date(2020, 3, 31))
 
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+st.text(''+d1.strftime('YYYYY-MM-DD'))
+st.text(''+d2.strftime('YYYYY-MM-DD'))
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select * from sales where (transaction_date <= '"+d1.strftime('YYYYY-MM-DD')+"' and transaction_date >= '"+d2.strftime('YYYYY-MM-DD')+"' and local_type='Appartement') limit 20")
     header = [x[0] for x in my_cur.description]
