@@ -99,8 +99,7 @@ fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", colo
 fig.show()
 #chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
 #chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
-st.pyplot(fig.figure)
-
+st.plotly_chart(fig)
 
 # Don't run anything past here while troubleshooting
 st.stop()
