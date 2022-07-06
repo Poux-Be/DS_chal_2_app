@@ -79,13 +79,14 @@ d2 = st.date_input(
      "Study period last day",
      datetime.date(2020, 4, 1))
 
-st.text('')
+
 
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select transaction_date, local_type, count(*) over (partition by transaction_date) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date order by transaction_date asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
+st.text(''+str(sum((my_query_results[my_query_results['local_type']=='Appartment']['daily_sales_count'].to_list())))+' appartments have been sold during this period of time')
 my_cnx.close()
 st.dataframe(my_query_results)
 
