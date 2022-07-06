@@ -92,7 +92,10 @@ st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appar
 my_cnx.close()
 
 #dataframe formatting to have a beautiful chart
-chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['Appartement', 'Maison'])
+chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE'])
+new_header = chart_df.iloc[0] #grab the first row for the header
+chart_df = chart_df[1:] #take the data less the header row
+chart_df.columns = new_header #set the header row as the df header
 st.bar_chart(chart_df)
 
 
