@@ -83,7 +83,6 @@ d2 = st.date_input(
      "Study period last day",
      datetime.date(2020, 4, 1))
 
-
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
     my_cur.execute("select transaction_date, local_type, count(*) over (partition by transaction_date) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
@@ -100,6 +99,19 @@ fig.show()
 #chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
 #chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
 st.plotly_chart(fig)
+
+# Second exercise, get the ratio of sales per room number
+st.header('Second query: Appartment sales per room number')
+my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+with my_cnx.cursor() as my_cur:
+    my_cur.execute("select room_number, count(*) over (partition by room_number) as sales_count from sales where local_type='Appartement' group by local_type, room_number order by room_number asc")
+    header = [x[0] for x in my_cur.description]
+    my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
+
+#answer the exercise question
+st.dataframe(my_query_results)
+my_cnx.close()
+
 
 # Don't run anything past here while troubleshooting
 st.stop()
