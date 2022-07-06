@@ -5,10 +5,13 @@ import os
 from xml.etree.ElementInclude import LimitedRecursiveIncludeError
 import requests
 import datetime
-import streamlit as st
+
 import snowflake.connector
 
 import pandas as pd
+import streamlit as st
+import plotly.express as px
+
 
 from urllib.error import URLError
 
@@ -92,9 +95,11 @@ st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appar
 my_cnx.close()
 
 #dataframe formatting to have a beautiful chart
-chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
-chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
-st.dataframe(chart_df)
+fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", color="LOCAL_TYPE", title="Daily sales from the "+d1.strftime('%Y-%m-%d')+" to the "+d2.strftime('%Y-%m-%d')+" per local type")
+fig.show()
+#chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
+#chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
+st.pyplot(fig)
 
 
 # Don't run anything past here while troubleshooting
