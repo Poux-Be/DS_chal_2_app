@@ -96,7 +96,7 @@ chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=[
 new_header = chart_df.iloc[0] #grab the first row for the header
 chart_df = chart_df[1:] #take the data less the header row
 chart_df.columns = new_header #set the header row as the df header
-st.bar_chart(chart_df)
+st.dataframe(chart_df)
 
 
 # Don't run anything past here while troubleshooting
