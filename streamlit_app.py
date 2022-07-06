@@ -35,7 +35,9 @@ def get_fruityvice_data(this_fruit_choice):
 def get_table(table_name):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("select * from "+table_name+" limit 20")
-        return (my_cur.fetchall())
+        header = my_cur.description
+        df = pd.DataFrame(my_cur.fetchall(), columns = header)
+        return (df)
 
 # Fetch Snowflake data headers
 def get_table_header(table_name):
@@ -59,10 +61,9 @@ streamlit.header('Data received')
 # Add a button to query the fruit list
 if streamlit.button("Get the intial data"):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-    my_data_rows = get_table("sales")
-    my_data_rows = pd.DataFrame(my_data_rows, columns = [x[0] for x in get_table_header("sales")])
+    my_table = get_table("sales")
     my_cnx.close()
-    streamlit.dataframe(my_data_rows)
+    streamlit.dataframe(my_table)
 
 
 # Don't run anything past here while troubleshooting
