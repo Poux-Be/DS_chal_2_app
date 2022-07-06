@@ -7,15 +7,20 @@ from numpy import sort
 import requests
 import datetime
 import matplotlib
-
 import snowflake.connector
 
 import pandas as pd
+import xarray as xr
+import geoviews as gv
 import streamlit as st
+import geopandas as gpd
 import plotly.express as px
+import geoviews.feature as gf
 
-
+from cartopy import crs
+from geoviews import dim
 from urllib.error import URLError
+
 # ------------------------
 # ------ Main code -------
 # ------------------------
@@ -134,13 +139,16 @@ st.plotly_chart(fig2)
 # ------------------------
 # Third exercise, get the top 10 higher-priced regions
 # ------------------------
+
+
+
 # Exercise title
 st.header('Thrid query: Average price per squarred meter per department 💵')
 
 # Snowflake query
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
+    my_cur.execute("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
@@ -148,6 +156,12 @@ my_cnx.close()
 #answer the exercise question
 st.dataframe(my_query_results)
 
+# Data prep - https://thedatafrog.com/fr/articles/choropleth-maps-python/
+sf = gpd.read_file('geojson/dept.geojson')
+sf['value'] = [my_query_results[my_query_results['DEPT_CODE']==x]["AVG_SQM_PRICE"] if x in my_query_results['DEPT_CODE'].to_list() else 0 for x in sf['code'].to_list()]
+deps = gv.Polygons(sf, vdims=['nom','value'])
+st.map(deps.opts(width=600, height=600, toolbar='above', color=dim('value'),
+          colorbar=True, tools=['hover'], aspect='equal'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
