@@ -3,6 +3,7 @@
 # ----- Imports -----
 import os
 from xml.etree.ElementInclude import LimitedRecursiveIncludeError
+from numpy import sort
 import requests
 import datetime
 import matplotlib
@@ -109,7 +110,7 @@ with my_cnx.cursor() as my_cur:
 my_cnx.close()
 
 #answer the exercise question
-fig2 = px.pie(my_query_results, values='SALES_COUNT', names='ROOMS_NUMBER', title='Apprtment sales per room number')
+fig2 = px.pie(my_query_results, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number', sort='ROOMS_NUMBER')
 fig2.show()
 st.plotly_chart(fig2)
 
