@@ -83,7 +83,7 @@ my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 
 
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select (count(*) over (partition by transaction_date) as daily_sales_count) from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"' and local_type='Appartement')")
+    my_cur.execute("select count(*) over (partition by transaction_date) as daily_sales_count from sales where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"' and local_type='Appartement')")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
