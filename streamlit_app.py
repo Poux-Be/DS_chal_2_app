@@ -39,7 +39,7 @@ def get_table(table_name):
         df = pd.DataFrame(my_cur.fetchall(), columns = header)
         return (df)
 
-def get_table_with_conditions_on_(table_name, **):
+def get_table_with_conditions_on_(table_name):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("select * from "+table_name+" limit 20")
         header = [x[0] for x in my_cur.description]
