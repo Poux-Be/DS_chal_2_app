@@ -103,7 +103,7 @@ st.plotly_chart(fig)
 st.header('Second query: Appartment sales per room number')
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select rooms_number, sum(*) over (partition by rooms_number) as sales_count from sales where local_type='Appartement' group by rooms_number order by rooms_number asc")
+    my_cur.execute("select rooms_number, count(*) over (partition by rooms_number) as sales_count from sales where local_type='Appartement' group by rooms_number order by rooms_number asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
