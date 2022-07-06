@@ -96,8 +96,7 @@ my_cnx.close()
 #dataframe formatting to have a beautiful chart
 fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", color="LOCAL_TYPE", title="Daily sales from the "+d1.strftime('%Y-%m-%d')+" to the "+d2.strftime('%Y-%m-%d')+" per local type")
 fig.show()
-#chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE']).fillna(0)
-#chart_df.columns = ['Appartement', 'Maison'] #set the header row as the df header
+
 st.plotly_chart(fig)
 
 # Second exercise, get the ratio of sales per room number
@@ -107,10 +106,12 @@ with my_cnx.cursor() as my_cur:
     my_cur.execute("select rooms_number, count(*) over (partition by rooms_number) as sales_count from sales where local_type='Appartement' group by local_type, rooms_number order by rooms_number asc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
+my_cnx.close()
 
 #answer the exercise question
-st.dataframe(my_query_results)
-my_cnx.close()
+fig2 = px.pie(my_query_results, values='SALES_COUNT', names='ROOMS_NUMBER', title='Apprtment sales per room number')
+fig2.show()
+st.plotly_chart(fig2)
 
 
 # Don't run anything past here while troubleshooting
