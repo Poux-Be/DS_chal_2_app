@@ -87,7 +87,7 @@ with my_cnx.cursor() as my_cur:
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 
-#st.text(''+str(sum((my_query_results[my_query_results['local_type']=='Appartment']['daily_sales_count'].to_list())))+' appartments have been sold during this period of time')
+st.text(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartment']['daily_sales_count'].to_list())))+' appartments have been sold during this period of time')
 my_cnx.close()
 st.dataframe(my_query_results)
 
