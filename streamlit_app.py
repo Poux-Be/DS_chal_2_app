@@ -140,7 +140,7 @@ st.header('Thrid query: Average price per squarred meter per department 💵')
 # Snowflake query
 my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select dept_code, average(transaction_value/carrez_surface) over (partition by dept_code) as sqm_price_average from sales_view group by dept_code order by sqm_price_average desc")
+    my_cur.execute("select dept_code, avg(transaction_value) as sqm_price_average from sales_view group by dept_code order by sqm_price_average desc")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
