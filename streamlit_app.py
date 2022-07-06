@@ -60,7 +60,7 @@ streamlit.header('Data received')
 if streamlit.button("Get the intial data"):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows = get_table("sales")
-    my_data_rows.columns = get_table_header("sales")
+    my_data_rows = pd.DataFrame(my_data_rows, columns = get_table_header("sales"))
     my_cnx.close()
     streamlit.dataframe(my_data_rows)
 
