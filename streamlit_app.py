@@ -5,6 +5,7 @@ import os
 from xml.etree.ElementInclude import LimitedRecursiveIncludeError
 import requests
 import datetime
+import matplotlib
 
 import snowflake.connector
 
