@@ -4,7 +4,8 @@
 import os
 from xml.etree.ElementInclude import LimitedRecursiveIncludeError
 import requests
-import streamlit
+import datetime
+import streamlit as st
 import snowflake.connector
 
 import pandas as pd
@@ -54,79 +55,86 @@ def insert_row_snowflake(new_fruit):
 
 
 # ----- Main display -----
-streamlit.title("D&A Challenge - 2")
+st.title("D&A Challenge - 2")
 
 # Simple menu
-streamlit.header('Data received')
-streamlit.text('Here is a snapshot of the data provided for this exercise.')
+st.header('Data received')
+st.text('Here is a snapshot of the data provided for this exercise.')
 
 # Query snowflake
 # Add a button to query the fruit list
-if streamlit.button("Get the intial data"):
-    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+if st.button("Display the intial data"):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
     my_table = get_table("sales")
     my_cnx.close()
-    streamlit.dataframe(my_table)
+    st.dataframe(my_table)
 
-# Frist exercise, query the data to count the number of appartmen sold between two dates
-streamlit.header('Frist query: ')
+# Frist exercise, query the data to count the number of appartments sold between two dates
+st.header('Frist query: Appartment sales between two dates')
+d1 = st.date_input(
+     "Study period first day",
+     datetime.date(2020, 1, 1))
 
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+d2 = st.date_input(
+     "Study period last day",
+     datetime.date(2020, 3, 31))
+
+my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
 with my_cnx.cursor() as my_cur:
-    my_cur.execute("select * from sales where (transaction_date >= '2020-02-03' and local_type='Appartement') limit 20")
+    my_cur.execute("select * from sales where (transaction_date <= '"+d1.strftime('YYYYY-MM-DD')+"' and transaction_date >= '"+d2.strftime('YYYYY-MM-DD')+"' and local_type='Appartement') limit 20")
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 my_cnx.close()
-streamlit.dataframe(my_query_results)
+st.dataframe(my_query_results)
 
 
 # Don't run anything past here while troubleshooting
-streamlit.stop()
+st.stop()
 
 
 # ---------- PREVIOUS CODE ---------- 
 
-streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
+st.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 # Let's put a pick list here so they can pick the fruit they want to include 
-fruits_selected = streamlit.multiselect("Pick some fruits:", list(my_fruit_list.index), ['Avocado', 'Strawberries'])
+fruits_selected = st.multiselect("Pick some fruits:", list(my_fruit_list.index), ['Avocado', 'Strawberries'])
 fruits_to_show = my_fruit_list.loc[fruits_selected]
 
 # Display the table on the page.
-streamlit.dataframe(fruits_to_show)
+st.dataframe(fruits_to_show)
 
 # Fruityvice advice
-streamlit.header("Fruityvice Fruit Advice!")
+st.header("Fruityvice Fruit Advice!")
 
 try: 
-    fruit_choice = streamlit.text_input('What fruit would you like information about?')
+    fruit_choice = st.text_input('What fruit would you like information about?')
 
     if not fruit_choice:
-        streamlit.error("Please select a fruit to get information.")
+        st.error("Please select a fruit to get information.")
 
     else:
         # Display the dataframe
-        streamlit.dataframe(get_fruityvice_data(fruit_choice))
+        st.dataframe(get_fruityvice_data(fruit_choice))
 
 except URLError as e:
-    streamlit.error()
+    st.error()
 
 
 
 # Query snowflake
-streamlit.header("The fruit list contains:")
+st.header("The fruit list contains:")
 # Add a button to query the fruit list
-if streamlit.button("Get Fruit Load List"):
-    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+if st.button("Get Fruit Load List"):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
     my_data_rows = get_fruit_load_list()
     my_cnx.close()
-    streamlit.dataframe(my_data_rows)
+    st.dataframe(my_data_rows)
 
 # Add fruit
-add_my_fruit = streamlit.text_input('What fruit would you like to add?')
+add_my_fruit = st.text_input('What fruit would you like to add?')
 
-if streamlit.button('Add a fruit to the list'):
-    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-    streamlit.text(insert_row_snowflake(add_my_fruit))
+if st.button('Add a fruit to the list'):
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+    st.text(insert_row_snowflake(add_my_fruit))
     my_cnx.close()
 
-#https://poux-be-first-streamlit-app-streamlit-app-6vwpjp.streamlitapp.com/
+#https://poux-be-first-st-app-st-app-6vwpjp.stapp.com/
