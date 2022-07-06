@@ -40,7 +40,7 @@ def get_table(table_name):
 # Fetch Snowflake data headers
 def get_table_header(table_name):
     with my_cnx.cursor() as my_cur:
-        my_cur.execute("select * from information_schema.columns where table_name = "+table_name)
+        my_cur.execute("select COLUMN_NAME from information_schema.columns where table_name = '"+table_name.upper()+"'")
         return (my_cur.fetchall())
 
 # Add a row into Snowflake
