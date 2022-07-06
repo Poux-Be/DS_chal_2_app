@@ -87,9 +87,13 @@ with my_cnx.cursor() as my_cur:
     header = [x[0] for x in my_cur.description]
     my_query_results = pd.DataFrame(my_cur.fetchall(), columns = header)
 
-st.text(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartement']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
+#answer the exercise question
+st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartement']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
 my_cnx.close()
-st.dataframe(my_query_results)
+
+#dataframe formatting to have a beautiful chart
+chart_df = pd.pivot_table(my_query_results, values=my_query_results['DAILY_SALES_COUNT'],index=my_query_results['TRANSACTION_DATE'], columns=my_query_results['LOCAL_TYPE'])
+st.dataframe(chart_df)
 
 
 # Don't run anything past here while troubleshooting
