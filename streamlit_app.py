@@ -92,7 +92,7 @@ st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appar
 my_cnx.close()
 
 #dataframe formatting to have a beautiful chart
-chart_df = pd.pivot_table(my_query_results, values=my_query_results['DAILY_SALES_COUNT'],index=my_query_results['TRANSACTION_DATE'], columns=my_query_results['LOCAL_TYPE'])
+chart_df = pd.pivot_table(my_query_results, values=['DAILY_SALES_COUNT'],index=['TRANSACTION_DATE'], columns=['LOCAL_TYPE'])
 st.dataframe(chart_df)
 
 
