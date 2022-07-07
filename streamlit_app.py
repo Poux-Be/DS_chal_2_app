@@ -126,17 +126,17 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info')
-my_query_results.join(df_departement.set_index('code_insee'), on='DEPT_CODE')
+my_query_results.join(df_departement.set_index('CODE_INSEE'), on='DEPT_CODE')
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
 
 # Transform dataframe into lists
-lat_list = my_query_results['Lat'].tolist()
-lon_list = my_query_results['Lon'].tolist()
+lat_list = my_query_results['LAT'].tolist()
+lon_list = my_query_results['LON'].tolist()
 lat_lon_list= []
 sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
-name_list = my_query_results['nom'].tolist()
+name_list = my_query_results['NAME'].tolist()
 
 # For all the departments
 for i in range(len(lat_list)):
