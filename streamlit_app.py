@@ -189,8 +189,8 @@ st.header('Seventh query: Departments with a high sales number increase between 
 df_7 = execute_sf_query_table("select dept_code, date_part(quarter,transaction_date::date) as t_quarter, sum(count(*)) over (partition by dept_code, t_quarter) as sales_count from sales_view group by dept_code, t_quarter")
 
 # Split the df per semester
-df_7_1 = df_7[df_7['T_QUARTER']==1].dropna().drop('T_QUARTER')
-df_7_2 = df_7[df_7['T_QUARTER']==2].drop('T_QUARTER')
+df_7_1 = df_7[df_7['T_QUARTER']==1].dropna().drop(['T_QUARTER'])
+df_7_2 = df_7[df_7['T_QUARTER']==2].drop(['T_QUARTER'])
 
 # Merge the dict again
 df_7 = df_7_1.merge(df_7_2, on='DEPT_CODE', how='left').fillna(0)
