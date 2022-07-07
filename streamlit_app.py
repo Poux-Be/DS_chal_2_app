@@ -132,7 +132,7 @@ top = st.slider('How many departments do you want to see?', 0, len(my_query_resu
 
 #answer the exercise question
 st.dataframe(my_query_results[:top].set_index('DEPT_CODE'))
-st.bar_chart(my_query_results[:top].set_index('DEPT_CODE'))
+st.bar_chart(my_query_results[:top].set_index('DEPT_CODE'), sort=False)
 
 
 
