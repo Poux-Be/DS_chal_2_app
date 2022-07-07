@@ -125,7 +125,7 @@ st.dataframe(my_query_results)
 
 # Draw the map
 # Load the department informations
-df_departement=pd.read_excel('geojson/contours_departements.xlsx')
+df_departement=pd.read_excel('dept_info\\contours_departements.xlsx')
 my_query_results.join(df_departement.set_index('code_insee'), on='DEPT&_CODE')
 
 # Map initialisation
