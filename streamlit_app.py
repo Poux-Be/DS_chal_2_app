@@ -203,9 +203,22 @@ df_7 = df_7.drop(['T_QUARTER_x', 'T_QUARTER_y'], axis=1)
 df_7['SALES_COUNT_Q2'] = df_7['SALES_COUNT_Q2'].astype(int)
 
 # Add the evolution column
-df_7['EVOL'] = 100*round((df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],2)
+df_7['EVOL (%)'] = 100*round((df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],4)
+df_7['EVOL (%)'] = df_7['EVOL (%)'].astype(int)
 
-st.dataframe(df_7[df_7['EVOL']>20])
+st.dataframe(df_7[df_7['EVOL (%)']>20])
+
+# ------------------------
+# Eighth exercise, get thesales number evolution
+# ------------------------
+
+# Exercise title
+st.header('Eighth query: Departments with a high sales number increase between the first and the second semester 💸')
+
+# Answer the question
+df_7 = execute_sf_query_table("select dept_code, date_part(quarter,transaction_date::date) as t_quarter, sum(count(*)) over (partition by dept_code, t_quarter) as sales_count from sales_view group by dept_code, t_quarter")
+
+
 
 # Don't run anything past here while troubleshooting
 st.stop()
