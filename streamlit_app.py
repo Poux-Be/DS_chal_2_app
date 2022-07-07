@@ -231,14 +231,14 @@ col2.metric("3-rooms 🥉 avg sqm price", str(int(three_rooms_avg_sqm_price))+ "
 
 
 # Exercise title
-st.header('Ninth query: Average price of the higher-priced cities in a multi-selection of departments')
+st.header('Ninth query: Average price of the 10 higher-priced cities in a multi-selection of departments ✨')
 
 # Query the list of departments
 dept_list = execute_sf_query_table("select distinct dept_code from sales_view")['DEPT_CODE'].to_list()
 selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select city_name, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name'))
+st.dataframe(execute_sf_query_table("select city_name, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name order by avg_price desc limit 10'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
