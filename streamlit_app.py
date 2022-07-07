@@ -11,6 +11,8 @@ import snowflake.connector
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+
+from streamlit_folium import st_folium
 from urllib.error import URLError
 
 # ------------------------
@@ -129,42 +131,20 @@ st.dataframe(execute_sf_query_table("select dept_code, avg(transaction_value/car
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info', None)
-st.dataframe(df_departement)
 
-st.text(df_departement[df_departement['INSEE_CODE']=='33'])
-st.text(my_query_results['DEPT_CODE'].to_list())
-st.text(df_departement['INSEE_CODE'].to_list())
-
-# Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
-#lat_list = []
-#lon_list = []
-#name_list = []
-#for dept in my_query_results['DEPT_CODE'].to_list():
-#    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'].values[0])
-#    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'].values[0])
-#    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'].values[0])
-#    st.text('Dept '+str(dept)+' Ok')
-#    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LAT'].values[0])
-#    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LON'].values[0])
-#    st.text(df_departement[df_departement['INSEE_CODE']==dept]['NAME'].values[0])
-#    st.text('----------------------------------------')
-#    
-#my_query_results['LAT'] = lat_list
-#my_query_results['LON'] = lon_list
-#my_query_results['NAME'] = name_list
-#
-#df_departement = df_departement.rename({'INSEE_CODE': 'DEPT_CODE'}, axis=1)
-
+# Left join to add the department informations
 my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
 
-
-# Answer the exercise question
+# Print merged table
 st.dataframe(my_query_results)
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
 
 # Transform dataframe into lists
+lat_list = my_query_results['LAT'].to_list()
+lon_list = my_query_results['LON'].to_list()
+name_list = my_query_results['NAME'].to_list()
 lat_lon_list= []
 sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
 
@@ -177,7 +157,7 @@ for i in range(len(lat_list)):
     folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
 
 #Print the map on the app
-st.map(map)
+st_folium(map, width = 725)
 
 # Don't run anything past here while troubleshooting
 st.stop()
