@@ -146,16 +146,15 @@ st.header('Fourth query: Average squarred meter price for a department 🏡/🏢
 # Dept code input
 region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
 selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
-st.text(" Your selection: "+selected_region)
 
-if st.button('Display the average sqm price'):
-    # Snowflake query
-    dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
-    my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code in ("+str(dept_list).replace('[','').replace(']','')+") group by local_type order by avg_sqm_price desc")
+# Snowflake query
+dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
+my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code in ("+str(dept_list).replace('[','').replace(']','')+") group by local_type order by avg_sqm_price desc")
 
-    col1, col2 = st.columns(2)
-    col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
-    col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
+# Display the different average prices with metrics
+col1, col2 = st.columns(2)
+col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
+col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
 
 # Don't run anything past here while troubleshooting
 st.stop()
