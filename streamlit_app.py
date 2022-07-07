@@ -131,7 +131,8 @@ default = my_query_results if len(my_query_results) <= 10 else 10
 top = st.slider('How many departments do you want to see?', 0, len(my_query_results), default)
 
 #answer the exercise question
-st.dataframe(my_query_results[:10])
+st.dataframe(my_query_results[:10].set_index('DEPT_CODE'))
+st.bar_chart(my_query_results[:10].set_index('DEPT_CODE'))
 
 
 
