@@ -44,7 +44,7 @@ def execute_sf_query_table(query):
 
 # Get a table in snowflake based on its name only
 def get_table(table_name, limit):
-    if type(limit) = int:
+    if type(limit) == int:
         return(execute_sf_query_table("select * from "+table_name+" limit "+str(limit)))
     else:
         return(execute_sf_query_table("select * from "+table_name+""))
