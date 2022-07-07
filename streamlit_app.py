@@ -164,7 +164,19 @@ col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=
 st.header('Fifth query: Top 10 higher priced appartments 🏢')
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select transaction_value, street_number, street_type, city_name, dept_code, carrez_surface, rooms_number from sales_view order by transaction_value desc limit 10"))
+st.dataframe(execute_sf_query_table("select transaction_value, street_number, street_type, city_name, dept_code, carrez_surface, rooms_number from sales_view where (transaction_value is not null and local_type='Appartement') order by transaction_value desc limit 10"))
+
+# ------------------------
+# Sixth exercise, get thesales number evolution
+# ------------------------
+
+# Exercise title
+st.header('Sixth query: Sales number evolution 📈')
+
+# Answer the question
+first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>=2020/01/01 and transaction_date<=2020/31/01)")
+second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>=2020/04/01 and transaction_date<=2020/31/07)")
+st.metric("1st semester",second_sem_sales_count, (second_sem_sales_count-first_sem_sales_count)/first_sem_sales_count)
 
 # Don't run anything past here while troubleshooting
 st.stop()
