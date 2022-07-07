@@ -115,7 +115,7 @@ st.plotly_chart(fig2)
 
 
 # ------------------------
-# Third exercise, get the top 10 higher-priced regions
+# Third exercise, get the top x higher-priced regions
 # ------------------------
 
 # Exercise title
@@ -131,7 +131,7 @@ default = my_query_results if len(my_query_results) <= 10 else 10
 top = st.slider('How many departments do you want to see?', 0, len(my_query_results), default)
 
 #answer the exercise question
-st.dataframe(my_query_results[:10])
+st.bar_chart(my_query_results[:top])
 
 
 
