@@ -61,18 +61,15 @@ def insert_row_snowflake(new_fruit):
 # ------------------------
 st.title("🎅 D&A Challenge - 2 🎅")
 
-@st.cache(suppress_st_warning=True)
-def intro():
-    # Display the data received in a dataframe
-    st.header('Data received')
-    st.text('Here is a snapshot of the data provided for this exercise.')
+# Display the data received in a dataframe
+st.header('Data received')
+st.text('Here is a snapshot of the data provided for this exercise.')
 
-    # Query snowflake
-    # Add a button to query the fruit list
-    if st.button("Display the intial data"):
-        st.dataframe(get_table("sales", 20))
+# Query snowflake
+# Add a button to query the fruit list
+if st.button("Display the intial data"):
+    st.dataframe(get_table("sales", 20))
 
-intro()
 
 # ------------------------
 # Frist exercise, query the data to count the number of appartments sold between two dates
