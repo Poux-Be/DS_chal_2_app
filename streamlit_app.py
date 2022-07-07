@@ -43,8 +43,11 @@ def execute_sf_query_table(query):
     return(pd.DataFrame(rows, columns = header))
 
 # Get a table in snowflake based on its name only
-def get_table(table_name):
-    return(execute_sf_query_table("select * from "+table_name+" limit 20"))
+def get_table(table_name, limit):
+    if type(limit) = int:
+        return(execute_sf_query_table("select * from "+table_name+" limit "+str(limit)))
+    else:
+        return(execute_sf_query_table("select * from "+table_name+""))
 
 # Add a row into Snowflake - Not used
 def insert_row_snowflake(new_fruit):
@@ -64,7 +67,7 @@ st.text('Here is a snapshot of the data provided for this exercise.')
 # Query snowflake
 # Add a button to query the fruit list
 if st.button("Display the intial data"):
-    st.dataframe(get_table("sales"))
+    st.dataframe(get_table("sales", 20))
 
 # ------------------------
 # Frist exercise, query the data to count the number of appartments sold between two dates
@@ -118,14 +121,14 @@ st.plotly_chart(fig2)
 st.header('Thrid query: Average price per squarred meter per department 💵')
 
 # Snowflake query
-my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10")
+my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
 #answer the exercise question
-st.dataframe(my_query_results)
+st.dataframe(execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10"))
 
 # Draw the map
 # Load the department informations
-df_departement=get_table('dept_info')
+df_departement=get_table('dept_info', None)
 
 st.text(df_departement[df_departement['INSEE_CODE']=='33'])
 st.text(my_query_results['DEPT_CODE'].to_list())
