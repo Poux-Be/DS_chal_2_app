@@ -118,7 +118,7 @@ st.plotly_chart(fig2)
 st.header('Thrid query: Average price per squarred meter per department 💵')
 
 # Snowflake query
-my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
+my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10")
 
 #answer the exercise question
 st.dataframe(my_query_results)
@@ -128,7 +128,7 @@ st.dataframe(my_query_results)
 df_departement=get_table('dept_info')
 st.dataframe(df_departement)
 
-my_query_results.join(df_departement.set_index('CODE_INSEE'), on='DEPT_CODE')
+my_query_results.join(df_departement.set_index('INSEE_CODE'), on='DEPT_CODE')
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
