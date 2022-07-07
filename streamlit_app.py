@@ -106,10 +106,10 @@ st.plotly_chart(fig)
 st.header('Second query: Appartment sales per room number #️⃣')
 
 # Query snowflake
-my_query_results = execute_sf_query_table("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales_view where local_type='Appartement' group by rooms_number order by rooms_number asc")
+my_query_results_2 = execute_sf_query_table("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales_view where local_type='Appartement' group by rooms_number order by rooms_number asc")
 
 # Answer the exercise question
-fig2 = px.pie(my_query_results, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number')
+fig2 = px.pie(my_query_results_2, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number')
 fig2.show()
 st.plotly_chart(fig2)
 
@@ -121,18 +121,18 @@ st.plotly_chart(fig2)
 # Exercise title
 st.header('Thrid query: Average squarred meter price per department 💵')
 # Snowflake query
-my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
+my_query_results_3 = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
 # Data formating
-my_query_results['AVG_SQM_PRICE'] = my_query_results['AVG_SQM_PRICE'].apply(ma.ceil)
+my_query_results_3['AVG_SQM_PRICE'] = my_query_results_3['AVG_SQM_PRICE'].apply(ma.ceil)
 
 st.text('This will display a top of the higher priced departments. Please select the number of departments you want to see.')
-default = my_query_results if len(my_query_results) <= 10 else 10
-top = st.slider('How many departments do you want to see?', 0, len(my_query_results), default)
+default = my_query_results_3 if len(my_query_results_3) <= 10 else 10
+top = st.slider('How many departments do you want to see?', 0, len(my_query_results_3), default)
 
 #answer the exercise question
-#st.dataframe(my_query_results[:top].set_index('DEPT_CODE'))
-fig3 = px.bar(my_query_results[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
+#st.dataframe(my_query_results_3[:top].set_index('DEPT_CODE'))
+fig3 = px.bar(my_query_results_3[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
 fig3.show()
 st.plotly_chart(fig3)
 
@@ -150,10 +150,11 @@ st.text(" Your selection: "+selected_region)
 
 if st.button('Display the average sqm price'):
     # Snowflake query
-    dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+selected_region+"'")['INSEE_CODE'].to_list()
-    my_query_results = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code is in ("+str(dept_list).replace('[','')+") group by local_type order by avg_sqm_price desc")
+    dept_list = execute_sf_query_table('select insee_code from dept_info where new_region ="'+selected_region+'"')['INSEE_CODE'].to_list()
+    my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code is in ("+str(dept_list).replace('[','')+") group by local_type order by avg_sqm_price desc")
 
-st.dataframe(my_query_results)
+    st.dataframe(my_query_results_4)
+
 
 # Don't run anything past here while troubleshooting
 st.stop()
