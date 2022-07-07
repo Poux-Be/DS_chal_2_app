@@ -134,7 +134,7 @@ for x in my_query_results['DEPT_CODE'].to_list():
 
 st.text(temp_list)
 
-my_query_results = my_query_results.merge(df_departement, left_on = 'DEPT_CODE', right_on = 'INSEE_CODE')
+my_query_results = my_query_results.merge(df_departement.set_index(['INSEE_CODE'], verify_integrity=True), left_on = 'DEPT_CODE')
 
 #answer the exercise question
 st.dataframe(my_query_results)
