@@ -161,7 +161,7 @@ col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=
 # ------------------------
 
 # Exercise title
-st.header('Fifth query: Top 10 higher priced appartments 🏢')
+st.header('Fifth query: Top 10 higher priced appartments sold 🏢')
 
 # Answer the question
 st.dataframe(execute_sf_query_table("select transaction_value, street_number, street_type, city_name, dept_code, carrez_surface, rooms_number from sales_view where (transaction_value is not null and local_type='Appartement') order by transaction_value desc limit 10"))
@@ -171,7 +171,7 @@ st.dataframe(execute_sf_query_table("select transaction_value, street_number, st
 # ------------------------
 
 # Exercise title
-st.header('Sixth query: Sales number evolution 📈')
+st.header('Sixth query: Sales number evolution for the second quarter 📈')
 
 # Answer the question
 first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0][0]
@@ -206,14 +206,14 @@ df_7['SALES_COUNT_Q2'] = df_7['SALES_COUNT_Q2'].astype(int)
 df_7['EVOL (%)'] = 100*round((df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],4)
 df_7['EVOL (%)'] = df_7['EVOL (%)'].astype(int)
 
-st.dataframe(df_7[df_7['EVOL (%)']>20])
+st.dataframe(df_7[df_7['EVOL (%)']>20].sort_values('EVOL (%)'))
 
 # ------------------------
-# Eighth exercise, get the avergae price difference between appartments with 2 rooms and the ones with 3 rooms
+# Eighth exercise, get the average price difference between appartments with 2 rooms and the ones with 3 rooms
 # ------------------------
 
 # Exercise title
-st.header('Eighth query: Avergae price difference between appartments with 🥈 rooms and the ones with 🥉 rooms')
+st.header('Eighth query: Average price difference between appartments with 🥈 rooms and the ones with 🥉 rooms')
 
 # Answer the question
 two_rooms_avg_sqm_price = execute_sf_query_table("select avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where rooms_number=2").values[0][0]
