@@ -174,8 +174,8 @@ st.dataframe(execute_sf_query_table("select transaction_value, street_number, st
 st.header('Sixth query: Sales number evolution 📈')
 
 # Answer the question
-first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0]
-second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31')").values[0]
+first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0][0]
+second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31')").values[0][0]
 st.text(second_sem_sales_count)
 st.text(type(first_sem_sales_count))
 st.metric("Second semester sales number",second_sem_sales_count, (second_sem_sales_count-first_sem_sales_count)/first_sem_sales_count)
@@ -188,7 +188,7 @@ st.metric("Second semester sales number",second_sem_sales_count, (second_sem_sal
 st.header('Seventh query: Departments with a high sales number increase betwwen the first and the second semester 💸')
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select transaction_date, count(*) from sales_view group by dept_code"))
+st.dataframe(execute_sf_query_table("(select dept, sum(count(*) (select dept_code, transaction_date, count(*),  from sales_view group by dept_code"))
 
 # Don't run anything past here while troubleshooting
 st.stop()
