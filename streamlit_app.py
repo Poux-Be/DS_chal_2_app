@@ -124,7 +124,7 @@ st.header('Thrid query: Average price per squarred meter per department 💵')
 my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
 # Data formating
-my_query_results['AVG_SQM_PRICE'] = my_query_results['AVG_SQM_PRICE'].apply(ma.ceil(0))
+my_query_results['AVG_SQM_PRICE'] = my_query_results['AVG_SQM_PRICE'].apply(ma.ceil)
 
 st.text('This will display a top of the higher priced departments. Please select the number of departments you want to see.')
 default = my_query_results if len(my_query_results) <= 10 else 10
