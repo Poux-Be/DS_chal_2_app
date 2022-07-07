@@ -229,7 +229,6 @@ col2.metric("3-rooms 🥉 avg sqm price", str(int(three_rooms_avg_sqm_price))+ "
 # Ninth exercise, get the average price of the higher-priced cities in a multi-selection of departments
 # ------------------------
 
-
 # Exercise title
 st.header('Ninth query: Average price of the 10 higher-priced cities in a multi-selection of departments ✨')
 
