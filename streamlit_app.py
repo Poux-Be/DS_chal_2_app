@@ -148,7 +148,7 @@ region_list = execute_sf_query_table("select distinct new_region from dept_info"
 selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
 
 # Snowflake query
-dept_list = execute_sf_query_table("select distinc insee_code from dept_info where new_region ='"+selected_region+"'")['INSEE_CODE'].to_list()
+dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+selected_region+"'")['INSEE_CODE'].to_list()
 my_query_results = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code is in ("+str(dept_list).replace('[','')+") group by local_type order by avg_sqm_price desc")
 
 st.dataframe(my_query_results)
