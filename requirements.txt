@@ -7,5 +7,5 @@ geopandas
 geoviews
 xarray
 geos
-proj
+proj>=8.0.0
 cartopy
