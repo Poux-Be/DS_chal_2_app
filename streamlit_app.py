@@ -176,10 +176,7 @@ st.header('Sixth query: Sales number evolution 📈')
 # Answer the question
 first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0][0]
 second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31')").values[0][0]
-st.text(second_sem_sales_count)
-st.text(first_sem_sales_count)
-st.text(type(first_sem_sales_count))
-st.metric("Second semester sales number",second_sem_sales_count, str(int(second_sem_sales_count - first_sem_sales_count))+ ' ('+str(int((second_sem_sales_count - first_sem_sales_count)/first_sem_sales_count))+" %)")
+st.metric("Second semester sales number",second_sem_sales_count, str(int(second_sem_sales_count - first_sem_sales_count))+ ' ('+str(ma.round((second_sem_sales_count - first_sem_sales_count)/first_sem_sales_count))+" %)")
 
 # ------------------------
 # Seventh exercise, get thesales number evolution
@@ -192,11 +189,11 @@ st.header('Seventh query: Departments with a high sales number increase between 
 df_7 = execute_sf_query_table("select dept_code, date_part(quarter,transaction_date::date) as t_quarter, sum(count(*)) over (partition by dept_code, t_quarter) as sales_count from sales_view group by dept_code, t_quarter")
 
 # Split the df per semester
-df_7_1 = df_7[df_7['T_QUARTER']==1]
+df_7_1 = df_7[df_7['T_QUARTER']==1].dropna()
 df_7_2 = df_7[df_7['T_QUARTER']==2]
 
 # Merge the dict again
-df_7 = df_7_2.merge(df_7_1, on='DEPT_CODE', how='left')
+df_7 = df_7_1.merge(df_7_2, on='DEPT_CODE', how='left').fillna(0)
 
 df_7['EVOL'] = df_7_2['SALES_COUNT']/ df_7_1['SALES_COUNT']
 
