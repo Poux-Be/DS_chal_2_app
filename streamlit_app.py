@@ -127,6 +127,9 @@ st.dataframe(my_query_results)
 # Load the department informations
 df_departement=get_table('dept_info')
 
+st.text(type(df_departement['INSEE_CODE'].to_list()))
+st.text(type(my_query_results['DEPT_CODE'].to_list()))
+
 my_query_results = my_query_results.join(df_departement.set_index('INSEE_CODE'), on='DEPT_CODE')
 
 #answer the exercise question
