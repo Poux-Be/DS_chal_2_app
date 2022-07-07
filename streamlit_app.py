@@ -127,7 +127,7 @@ st.dataframe(my_query_results)
 # Load the department informations
 df_departement=get_table('dept_info')
 
-st.text(df_departement[df_departement['INSEE_CODE']==my_query_results['DEPT_CODE'].to_list()[0]], my_query_results['DEPT_CODE'].to_list(), df_departement['INSEE_CODE'].to_list())
+st.text(df_departement[df_departement['INSEE_CODE']==my_query_results['DEPT_CODE'].to_list()[0]] + '//' + my_query_results['DEPT_CODE'].to_list() + '//' + df_departement['INSEE_CODE'].to_list())
 
 # Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
 lat_list = []
