@@ -131,13 +131,27 @@ default = my_query_results if len(my_query_results) <= 10 else 10
 top = st.slider('How many departments do you want to see?', 0, len(my_query_results), default)
 
 #answer the exercise question
-st.dataframe(my_query_results[:top].set_index('DEPT_CODE'))
+#st.dataframe(my_query_results[:top].set_index('DEPT_CODE'))
 fig3 = px.bar(my_query_results[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
 fig3.show()
 st.plotly_chart(fig3)
 
+# ------------------------
+# Fourth exercise, get the top x higher-priced regions
+# ------------------------
 
+# Exercise title
+st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
 
+# Dept code input
+region_list = execute_sf_query_table("select distinc new_region from dept_info").to_list()
+selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
+
+# Snowflake query
+dept_list = execute_sf_query_table("select distinc insee_code from dept_info where new_region ='"+selected_region+"'").to_list()
+my_query_results = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code is in ("+str(dept_list).replace('[','')+") group by local_type order by avg_sqm_price desc")
+
+st.dataframe(my_query_results)
 
 # Don't run anything past here while troubleshooting
 st.stop()
