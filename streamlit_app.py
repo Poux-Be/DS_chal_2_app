@@ -127,27 +127,28 @@ st.dataframe(my_query_results)
 # Load the department informations
 df_departement=get_table('dept_info')
 
-temp_list = df_departement['INSEE_CODE'].to_list()
-for x in my_query_results['DEPT_CODE'].to_list():
-    if x not in temp_list:
-        temp_list.append(x)
+# Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
+lat_list = []
+lon_list = []
+name_list = []
+for dept in my_query_results['DEPT_CODE'].to_list():
+    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'])
+    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
+    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
 
-st.text(temp_list)
+my_query_results['LAT'] = lat_list
+my_query_results['LON'] = lon_list
+my_query_results['NAME'] = name_list
 
-my_query_results = my_query_results.merge(df_departement.rename({'INSEE_CODE': 'DEPT_CODE'}, axis=1), on=['DEPT_CODE'], how='left')
-
-#answer the exercise question
+# Answer the exercise question
 st.dataframe(my_query_results)
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
 
 # Transform dataframe into lists
-lat_list = my_query_results['LAT'].tolist()
-lon_list = my_query_results['LON'].tolist()
 lat_lon_list= []
 sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
-name_list = my_query_results['NAME'].tolist()
 
 # For all the departments
 for i in range(len(lat_list)):
