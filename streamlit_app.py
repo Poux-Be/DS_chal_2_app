@@ -234,7 +234,7 @@ col2.metric("3-rooms 🥉 avg sqm price", str(int(three_rooms_avg_sqm_price))+ "
 st.header('Ninth query: Average price of the higher-priced cities in a multi-selection of departments')
 
 # Query the list of departments
-dept_list = execute_sf_query_table("select distinct dept_code from sales_view")['dept_code'].to_list()
+dept_list = execute_sf_query_table("select distinct dept_code from sales_view").to_list()
 selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
 
 # Answer the question
