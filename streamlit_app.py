@@ -126,6 +126,8 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info')
+st.dataframe(df_departement)
+
 my_query_results.join(df_departement.set_index('CODE_INSEE'), on='DEPT_CODE')
 
 # Map initialisation
