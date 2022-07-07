@@ -128,36 +128,37 @@ my_query_results = execute_sf_query_table("select dept_code, avg(transaction_val
 #answer the exercise question
 st.dataframe(execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10"))
 
-# Draw the map
-# Load the department informations
-df_departement=get_table('dept_info', None)
+# Draw the map if requested
+if st.button("Display them on a map"):
+    # Load the department informations
+    df_departement=get_table('dept_info', None)
 
-# Left join to add the department informations
-my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
+    # Left join to add the department informations
+    my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
 
-# Print merged table
-st.dataframe(my_query_results)
+    # Print merged table
+    st.dataframe(my_query_results)
 
-# Map initialisation
-map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
+    # Map initialisation
+    map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
 
-# Transform dataframe into lists
-lat_list = my_query_results['LAT'].to_list()
-lon_list = my_query_results['LON'].to_list()
-name_list = my_query_results['NAME'].to_list()
-lat_lon_list= []
-sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
+    # Transform dataframe into lists
+    lat_list = my_query_results['LAT'].to_list()
+    lon_list = my_query_results['LON'].to_list()
+    name_list = my_query_results['NAME'].to_list()
+    lat_lon_list= []
+    sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
 
-# For all the departments
-for i in range(len(lat_list)):
-    lat_lon_list.append([lat_list[i],lon_list[i]])
+    # For all the departments
+    for i in range(len(lat_list)):
+        lat_lon_list.append([lat_list[i],lon_list[i]])
 
-# Add markers
-for i in range(len(lat_list)):
-    folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
+    # Add markers
+    for i in range(len(lat_list)):
+        folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
 
-#Print the map on the app
-st_folium(map, width = 725)
+    #Print the map on the app
+    st_folium(map, width = 725)
 
 # Don't run anything past here while troubleshooting
 st.stop()
