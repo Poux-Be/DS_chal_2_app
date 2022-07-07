@@ -122,6 +122,11 @@ my_query_results = execute_sf_query_table("select dept_code, avg(transaction_val
 #answer the exercise question
 st.dataframe(my_query_results)
 
+# Draw the map
+# Load the department informations
+df_departement=pd.read_excel('contours_departements.xlsx')
+my_query_results.join(df_departement.set_index('code_insee'), on='CODE')
+
 # Don't run anything past here while troubleshooting
 st.stop()
 
