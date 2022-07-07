@@ -23,6 +23,7 @@ PATH = os.getcwd()
 
 # Functions
 # Fetch Snowflake data
+@st.cache(suppress_st_warning=True)
 def execute_sf_query_table(query):
     # Connect to Snowflake
     my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
@@ -44,6 +45,7 @@ def execute_sf_query_table(query):
     return(pd.DataFrame(rows, columns = header))
 
 # Get a table in snowflake based on its name only
+@st.cache(suppress_st_warning=True)
 def get_table(table_name, limit):
     if type(limit) == int:
         return(execute_sf_query_table("select * from "+table_name+" limit "+str(limit)))
@@ -70,105 +72,92 @@ st.text('Here is a snapshot of the data provided for this exercise.')
 if st.button("Display the intial data"):
     st.dataframe(get_table("sales", 20))
 
-
 # ------------------------
 # Frist exercise, query the data to count the number of appartments sold between two dates
 # ------------------------
-@st.cache(suppress_st_warning=True)
-def first_exercise():
-    # Exercise title
-    st.header('Frist query: Appartment sales between two dates 📆')
+# Exercise title
+st.header('Frist query: Appartment sales between two dates 📆')
 
-    # Select the first date
-    d1 = st.date_input(
-        "Study period first day",
-        datetime.date(2020, 1, 1))
+# Select the first date
+d1 = st.date_input(
+     "Study period first day",
+     datetime.date(2020, 1, 1))
 
-    # Select the second date
-    d2 = st.date_input(
-        "Study period last day",
-        datetime.date(2020, 3, 31))
+# Select the second date
+d2 = st.date_input(
+     "Study period last day",
+     datetime.date(2020, 3, 31))
 
-    # Query snowflake
-    my_query_results = execute_sf_query_table("select transaction_date, local_type, sum(count(*)) over (partition by transaction_date, local_type) as daily_sales_count from sales_view where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
+# Query snowflake
+my_query_results = execute_sf_query_table("select transaction_date, local_type, sum(count(*)) over (partition by transaction_date, local_type) as daily_sales_count from sales_view where (transaction_date <= '"+d2.strftime('%Y-%m-%d')+"' and transaction_date >= '"+d1.strftime('%Y-%m-%d')+"') group by transaction_date, local_type order by transaction_date asc")
 
-    # Answer the exercise question
-    st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartement']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
+# Answer the exercise question
+st.subheader(''+str(sum((my_query_results[my_query_results['LOCAL_TYPE']=='Appartement']['DAILY_SALES_COUNT'].to_list())))+' appartments have been sold during this period of time')
 
-    # Dataframe formatting to have a beautiful chart
-    fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", color="LOCAL_TYPE", title="Daily sales from the "+d1.strftime('%Y-%m-%d')+" to the "+d2.strftime('%Y-%m-%d')+" per local type")
-    fig.show()
+# Dataframe formatting to have a beautiful chart
+fig = px.bar(my_query_results, x="TRANSACTION_DATE", y="DAILY_SALES_COUNT", color="LOCAL_TYPE", title="Daily sales from the "+d1.strftime('%Y-%m-%d')+" to the "+d2.strftime('%Y-%m-%d')+" per local type")
+fig.show()
 
-    st.plotly_chart(fig)
+st.plotly_chart(fig)
 
-first_exercise()
 
 # ------------------------
 # Second exercise, get the ratio of sales per room number
 # ------------------------
 # Exercise title
-@st.cache(suppress_st_warning=True)
-def second_exercise():
-    st.header('Second query: Appartment sales per room number #️⃣')
+st.header('Second query: Appartment sales per room number #️⃣')
 
-    # Query snowflake
-    my_query_results_2 = execute_sf_query_table("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales_view where local_type='Appartement' group by rooms_number order by rooms_number asc")
+# Query snowflake
+my_query_results_2 = execute_sf_query_table("select rooms_number, sum(count(*)) over (partition by rooms_number) as sales_count from sales_view where local_type='Appartement' group by rooms_number order by rooms_number asc")
 
-    # Answer the exercise question
-    fig2 = px.pie(my_query_results_2, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number')
-    fig2.show()
-    st.plotly_chart(fig2)
+# Answer the exercise question
+fig2 = px.pie(my_query_results_2, values='SALES_COUNT', names='ROOMS_NUMBER', title='Appartment sales per room number')
+fig2.show()
+st.plotly_chart(fig2)
 
-second_exercise()
 
 # ------------------------
 # Third exercise, get the top x higher-priced regions
 # ------------------------
-@st.cache(suppress_st_warning=True)
-def third_exercise():
-    # Exercise title
-    st.header('Thrid query: Average squarred meter price per department 💵')
-    # Snowflake query
-    my_query_results_3 = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
-    # Data formating
-    my_query_results_3['AVG_SQM_PRICE'] = my_query_results_3['AVG_SQM_PRICE'].apply(ma.ceil)
+# Exercise title
+st.header('Thrid query: Average squarred meter price per department 💵')
+# Snowflake query
+my_query_results_3 = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
-    st.text('This will display a top of the higher priced departments. Please select the number of departments you want to see.')
-    default = my_query_results_3 if len(my_query_results_3) <= 10 else 10
-    top = st.slider('How many departments do you want to see?', 0, len(my_query_results_3), default)
+# Data formating
+my_query_results_3['AVG_SQM_PRICE'] = my_query_results_3['AVG_SQM_PRICE'].apply(ma.ceil)
 
-    #answer the exercise question
-    #st.dataframe(my_query_results_3[:top].set_index('DEPT_CODE'))
-    fig3 = px.bar(my_query_results_3[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
-    fig3.show()
-    st.plotly_chart(fig3)
+st.text('This will display a top of the higher priced departments. Please select the number of departments you want to see.')
+default = my_query_results_3 if len(my_query_results_3) <= 10 else 10
+top = st.slider('How many departments do you want to see?', 0, len(my_query_results_3), default)
 
-third_exercise()
+#answer the exercise question
+#st.dataframe(my_query_results_3[:top].set_index('DEPT_CODE'))
+fig3 = px.bar(my_query_results_3[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
+fig3.show()
+st.plotly_chart(fig3)
 
 # ------------------------
 # Fourth exercise, get the top x higher-priced regions
 # ------------------------
-@st.cache(suppress_st_warning=True)
-def fourth_exercise():
-    # Exercise title
-    st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
 
-    # Dept code input
-    region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
-    selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list, 'Ile-de-France')
-    st.text(" Your selection: "+selected_region)
+# Exercise title
+st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
 
-    if st.button('Display the average sqm price'):
-        # Snowflake query
-        dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
-        my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code in ("+str(dept_list).replace('[','').replace(']','')+") group by local_type order by avg_sqm_price desc")
+# Dept code input
+region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
+selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list, 'Ile-de-France')
+st.text(" Your selection: "+selected_region)
 
-        col1, col2 = st.columns(2)
-        col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
-        col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
+if st.button('Display the average sqm price'):
+    # Snowflake query
+    dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
+    my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code in ("+str(dept_list).replace('[','').replace(']','')+") group by local_type order by avg_sqm_price desc")
 
-fourth_exercise()
+    col1, col2 = st.columns(2)
+    col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
+    col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
 
 # Don't run anything past here while troubleshooting
 st.stop()
