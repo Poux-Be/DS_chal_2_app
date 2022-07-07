@@ -136,21 +136,22 @@ st.text(my_query_results['DEPT_CODE'].to_list())
 st.text(df_departement['INSEE_CODE'].to_list())
 
 # Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
-#lat_list = []
-#lon_list = []
-#name_list = []
-#for dept in my_query_results['DEPT_CODE'].to_list():
-#    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'])
-#    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
-#    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
-#
-#my_query_results['LAT'] = lat_list
-#my_query_results['LON'] = lon_list
-#my_query_results['NAME'] = name_list
+lat_list = []
+lon_list = []
+name_list = []
+for dept in my_query_results['DEPT_CODE'].to_list():
+    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'])
+    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
+    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
+    st.text("Dept "+str(dept)+" Ok : "+df_departement[df_departement['INSEE_CODE']==dept]['LAT']+"/"+df_departement[df_departement['INSEE_CODE']==dept]['LON']+"/"+df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
 
-df_departement = df_departement.rename({'INSEE_CODE': 'DEPT_CODE'}, axis=1)
+my_query_results['LAT'] = lat_list
+my_query_results['LON'] = lon_list
+my_query_results['NAME'] = name_list
 
-my_query_results = my_query_results.merge(df_departement, let_on=['DEPT_CODE'], how='left')
+#df_departement = df_departement.rename({'INSEE_CODE': 'DEPT_CODE'}, axis=1)
+
+#my_query_results = my_query_results.merge(df_departement, let_on=['DEPT_CODE'], how='left')
 
 
 # Answer the exercise question
