@@ -137,11 +137,11 @@ fig3.show()
 st.plotly_chart(fig3)
 
 # ------------------------
-# Fourth exercise, get the top x higher-priced regions
+# Fourth exercise, get the average squarred meter price per region
 # ------------------------
 
 # Exercise title
-st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
+st.header('Fourth query: Average squarred meter price per region 🏡/🏢')
 
 # Dept code input
 region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
@@ -155,6 +155,16 @@ my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_
 col1, col2 = st.columns(2)
 col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
 col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
+
+# ------------------------
+# Fifth exercise, get the top 10 higher-priced appartments
+# ------------------------
+
+# Exercise title
+st.header('Fifth query: Top 10 higher priced appartments 🏢')
+
+# Answer the question
+st.dataframe(execute_sf_query_table("select transaction_value, street_number, street_type, city_name, dept_code, carrez_surface, rooms_number from sales_view order by transaction_value desc limit 10"))
 
 # Don't run anything past here while troubleshooting
 st.stop()
