@@ -127,16 +127,16 @@ st.dataframe(my_query_results)
 # Load the department informations
 df_departement=get_table('dept_info')
 
-st.text(type(df_departement['LAT'].to_list()[0]))
+st.text(df_departement[df_departement['INSEE_CODE']==my_query_results['DEPT_CODE'].to_list()[0]], my_query_results['DEPT_CODE'].to_list(), df_departement['INSEE_CODE'].to_list())
 
 # Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
 lat_list = []
 lon_list = []
 name_list = []
 for dept in my_query_results['DEPT_CODE'].to_list():
-    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'].to_list()[0])
-    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'].to_list()[0])
-    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'].to_list()[0])
+    lat_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LAT'])
+    lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
+    name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
 
 my_query_results['LAT'] = lat_list
 my_query_results['LON'] = lon_list
