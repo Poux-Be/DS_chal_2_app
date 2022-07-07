@@ -206,7 +206,7 @@ df_7['SALES_COUNT_Q2'] = df_7['SALES_COUNT_Q2'].astype(int)
 df_7['EVOL (%)'] = 100*round((df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],4)
 df_7['EVOL (%)'] = df_7['EVOL (%)'].astype(int)
 
-st.dataframe(df_7[df_7['EVOL (%)']>20].sort_values('EVOL (%)'))
+st.dataframe(df_7[df_7['EVOL (%)']>20].sort_values('EVOL (%)', ascending=False))
 
 # ------------------------
 # Eighth exercise, get the average price difference between appartments with 2 rooms and the ones with 3 rooms
@@ -236,10 +236,9 @@ st.header('Ninth query: Average price of the 10 higher-priced cities in a multi-
 # Query the list of departments
 dept_list = execute_sf_query_table("select distinct dept_code from sales_view")['DEPT_CODE'].to_list()
 selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
-st.text(selected_dept_list)
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select city_name, dept_code, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name, dept_code order by avg_price desc limit 10'))
+st.dataframe(execute_sf_query_table("select city_name, dept_code, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(selected_dept_list).replace('[','').replace(']','')+') group by city_name, dept_code order by avg_price desc limit 10'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
