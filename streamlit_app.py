@@ -216,7 +216,13 @@ st.dataframe(df_7[df_7['EVOL (%)']>20])
 st.header('Eighth query: Departments with a high sales number increase between the first and the second semester 💸')
 
 # Answer the question
-df_7 = execute_sf_query_table("select dept_code, date_part(quarter,transaction_date::date) as t_quarter, sum(count(*)) over (partition by dept_code, t_quarter) as sales_count from sales_view group by dept_code, t_quarter")
+two_rooms_avg_sqm_price = execute_sf_query_table("select avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where rooms_number=2").values[0][0]
+three_rooms_avg_sqm_price = execute_sf_query_table("select avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where rooms_number=3").values[0][0]
+
+# Display the different average prices with metrics
+col1, col2 = st.columns(2)
+col1.metric("2-rooms 🏢🏢 avg sqm price", str(int(two_rooms_avg_sqm_price))+ " €")
+col2.metric("3-rooms 🏢🏢🏢 avg sqm price", str(int(three_rooms_avg_sqm_price))+ " €", str(100*round((three_rooms_avg_sqm_price-two_rooms_avg_sqm_price)/two_rooms_avg_sqm_price,2))+ " %")
 
 
 
