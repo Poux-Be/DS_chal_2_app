@@ -2,7 +2,6 @@
 
 # ----- Imports -----
 import os
-import folium
 import requests
 import datetime
 import matplotlib
@@ -12,7 +11,6 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-from streamlit_folium import st_folium
 from urllib.error import URLError
 
 # ------------------------
@@ -121,44 +119,18 @@ st.plotly_chart(fig2)
 
 # Exercise title
 st.header('Thrid query: Average price per squarred meter per department 💵')
-
 # Snowflake query
 my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
+st.text('This will display a top of the higher priced departments. Please select the number of departments you want to see.')
+default = my_query_results if len(my_query_results) <= 10 else 10
+top = st.slider('How many departments do you want to see?', 0, len(my_query_results), default)
+
 #answer the exercise question
-st.dataframe(execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10"))
+st.dataframe(my_query_results[:10])
 
-# Draw the map if requested
-if st.button("Display them on a map"):
-    # Load the department informations
-    df_departement=get_table('dept_info', None)
 
-    # Left join to add the department informations
-    my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
 
-    # Print merged table
-    st.dataframe(my_query_results)
-
-    # Map initialisation
-    map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
-
-    # Transform dataframe into lists
-    lat_list = my_query_results['LAT'].to_list()
-    lon_list = my_query_results['LON'].to_list()
-    name_list = my_query_results['NAME'].to_list()
-    lat_lon_list= []
-    sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
-
-    # For all the departments
-    for i in range(len(lat_list)):
-        lat_lon_list.append([lat_list[i],lon_list[i]])
-
-    # Add markers
-    for i in range(len(lat_list)):
-        folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
-
-    #Print the map on the app
-    st_folium(map, width = 725)
 
 # Don't run anything past here while troubleshooting
 st.stop()
@@ -192,3 +164,36 @@ if st.button('Add a fruit to the list'):
     my_cnx.close()
 
 #https://poux-be-first-st-app-st-app-6vwpjp.stapp.com/
+
+# old code to have a map
+# import folium
+# from streamlit_folium import st_folium
+# Load the department informations
+# df_departement=get_table('dept_info', None)
+
+# Left join to add the department informations
+# my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
+
+# # Print merged table
+# st.dataframe(my_query_results)
+
+# # Map initialisation
+# map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
+
+# # Transform dataframe into lists
+# lat_list = my_query_results['LAT'].to_list()
+# lon_list = my_query_results['LON'].to_list()
+# name_list = my_query_results['NAME'].to_list()
+# lat_lon_list= []
+# sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
+
+# # For all the departments
+# for i in range(len(lat_list)):
+#     lat_lon_list.append([lat_list[i],lon_list[i]])
+
+# # Add markers
+# for i in range(len(lat_list)):
+#     folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
+
+# #Print the map on the app
+# st_folium(map, width = 725)
