@@ -145,7 +145,7 @@ st.header('Fourth query: Average squarred meter price per region 🏡/🏢')
 
 # Dept code input
 region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
-selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
+selected_region = st.selectbox("Please select the region you want to study", region_list)
 
 # Snowflake query
 dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
@@ -225,6 +225,20 @@ col1.metric("2-rooms 🥈 avg sqm price", str(int(two_rooms_avg_sqm_price))+ " �
 col2.metric("3-rooms 🥉 avg sqm price", str(int(three_rooms_avg_sqm_price))+ " €", str(100*round((three_rooms_avg_sqm_price-two_rooms_avg_sqm_price)/two_rooms_avg_sqm_price,2))+ " %")
 
 
+# ------------------------
+# Ninth exercise, get the average price of the higher-priced cities in a multi-selection of departments
+# ------------------------
+
+
+# Exercise title
+st.header('Ninth query: Average price of the higher-priced cities in a multi-selection of departments')
+
+# Query the list of departments
+dept_list = execute_sf_query_table("select distinct dept_code from sales_view")['dept_code'].to_list()
+selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
+
+# Answer the question
+st.dataframe(execute_sf_query_table("select city_name, avg(transaction_value) over (partition on city_name) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+')'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
