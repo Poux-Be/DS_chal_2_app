@@ -151,7 +151,7 @@ st.text(" Your selection: "+selected_region)
 if st.button('Display the average sqm price'):
     # Snowflake query
     dept_list = execute_sf_query_table("select insee_code from dept_info where new_region ='"+str(selected_region).replace("'","''")+"'")['INSEE_CODE'].to_list()
-    st.text(str(dept_list).replace('[',''))
+    st.text(str(dept_list).replace('[','').replace(']',''))
     my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code is in ("+str(dept_list).replace('[','')+") group by local_type order by avg_sqm_price desc")
 
     st.dataframe(my_query_results_4)
