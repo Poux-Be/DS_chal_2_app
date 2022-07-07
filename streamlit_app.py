@@ -176,7 +176,7 @@ st.header('Sixth query: Sales number evolution 📈')
 # Answer the question
 first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0][0]
 second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31')").values[0][0]
-st.metric("Second semester sales number",second_sem_sales_count, str(int(second_sem_sales_count - first_sem_sales_count))+ ' ('+str(ma.round((second_sem_sales_count - first_sem_sales_count)/first_sem_sales_count))+" %)")
+st.metric("Second semester sales number",second_sem_sales_count, str(int(second_sem_sales_count - first_sem_sales_count))+ ' ('+str(round((second_sem_sales_count - first_sem_sales_count)/first_sem_sales_count))+" %)")
 
 # ------------------------
 # Seventh exercise, get thesales number evolution
