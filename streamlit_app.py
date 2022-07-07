@@ -144,9 +144,9 @@ for dept in my_query_results['DEPT_CODE'].to_list():
     lon_list.append(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
     name_list.append(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
     st.text('Dept '+str(dept)+' Ok')
-    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LAT'])
-    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LON'])
-    st.text(df_departement[df_departement['INSEE_CODE']==dept]['NAME'])
+    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LAT'].values)
+    st.text(df_departement[df_departement['INSEE_CODE']==dept]['LON'].values)
+    st.text(df_departement[df_departement['INSEE_CODE']==dept]['NAME'].values)
     st.text('---------------------------------------')
     
 my_query_results['LAT'] = lat_list
