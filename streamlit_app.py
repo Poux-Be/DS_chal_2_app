@@ -238,12 +238,12 @@ dept_list = execute_sf_query_table("select distinct dept_code from sales_view")[
 selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select city_name, avg(transaction_value) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name'))
+st.dataframe(execute_sf_query_table("select city_name, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
 
-#https://poux-be-first-st-app-st-app-6vwpjp.stapp.com/
+#https://poux-be-ds-chal-2-app-streamlit-app-w30f4m.streamlitapp.com/
 
 # old code to have a map
 # import folium
