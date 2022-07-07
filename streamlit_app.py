@@ -126,9 +126,11 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info')
-st.dataframe(df_departement)
 
 my_query_results.join(df_departement.set_index('INSEE_CODE'), on='DEPT_CODE')
+
+#answer the exercise question
+st.dataframe(my_query_results)
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
