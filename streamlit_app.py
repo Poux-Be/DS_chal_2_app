@@ -2,6 +2,7 @@
 
 # ----- Imports -----
 import os
+import folium
 import requests
 import datetime
 import matplotlib
@@ -125,7 +126,28 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=pd.read_excel('contours_departements.xlsx')
-my_query_results.join(df_departement.set_index('code_insee'), on='CODE')
+my_query_results.join(df_departement.set_index('code_insee'), on='DEPT&_CODE')
+
+# Map initialisation
+map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
+
+# Transform dataframe into lists
+lat_list = my_query_results['Lat'].tolist()
+lon_list = my_query_results['Lon'].tolist()
+lat_lon_list= []
+sqm_price_list = my_query_results['AVG_SQM_PRICE'].tolist()
+name_list = my_query_results['nom'].tolist()
+
+# For all the departments
+for i in range(len(lat_list)):
+    lat_lon_list.append([lat_list[i],lon_list[i]])
+
+# Add markers
+for i in range(len(lat_list)):
+    folium.Marker(lat_lon_list[i],popup='Prix moyen dans le département {} : {}€/m²'.format(name_list[i],sqm_price_list[i])).add_to(map)
+
+#Print the map on the app
+st.map(map)
 
 # Don't run anything past here while troubleshooting
 st.stop()
