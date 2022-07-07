@@ -179,7 +179,7 @@ second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view
 st.text(second_sem_sales_count)
 st.text(first_sem_sales_count)
 st.text(type(first_sem_sales_count))
-st.metric("Second semester sales number",second_sem_sales_count, int(int(second_sem_sales_count - first_sem_sales_count)))
+st.metric("Second semester sales number",second_sem_sales_count, str(int(second_sem_sales_count - first_sem_sales_count))+ ' ('+str(int((second_sem_sales_count - first_sem_sales_count)/first_sem_sales_count))+" %)")
 
 # ------------------------
 # Seventh exercise, get thesales number evolution
