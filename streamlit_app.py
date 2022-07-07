@@ -23,7 +23,6 @@ PATH = os.getcwd()
 
 # Functions
 # Fetch Snowflake data
-@st.cache(suppress_st_warning=True)
 def execute_sf_query_table(query):
     # Connect to Snowflake
     my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
@@ -45,7 +44,6 @@ def execute_sf_query_table(query):
     return(pd.DataFrame(rows, columns = header))
 
 # Get a table in snowflake based on its name only
-@st.cache(suppress_st_warning=True)
 def get_table(table_name, limit):
     if type(limit) == int:
         return(execute_sf_query_table("select * from "+table_name+" limit "+str(limit)))
