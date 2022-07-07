@@ -155,8 +155,8 @@ if st.button('Display the average sqm price'):
     my_query_results_4 = execute_sf_query_table("select local_type, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where dept_code in ("+str(dept_list).replace('[','').replace(']','')+") group by local_type order by avg_sqm_price desc")
 
     col1, col2 = st.columns(2)
-    col1.metric("🏡", my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0])
-    col2.metric("🏢", my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0])
+    col1.metric("🏡", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Maison']['AVG_SQM_PRICE'].values[0]))+ " €")
+    col2.metric("🏢", str(int(my_query_results_4[my_query_results_4['LOCAL_TYPE']=='Appartement']['AVG_SQM_PRICE'].values[0]))+ " €")
 
 # Don't run anything past here while troubleshooting
 st.stop()
