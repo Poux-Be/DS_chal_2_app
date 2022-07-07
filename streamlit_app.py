@@ -198,7 +198,7 @@ df_7 = df_7_1.merge(df_7_2, on='DEPT_CODE', how='left').fillna(0)
 # Rename the columns and drop the quarters
 df_7.rename({'SALES_COUNT_x':'SALES_COUNT_Q1', 'SALES_COUNT_y': 'SALES_COUNT_Q2'}, axis=1)
 st.dataframe(df_7)
-df_7.drop(['T_QUARTER_x', 'T_QUARTER_y'])
+df_7.drop(['T_QUARTER_x', 'T_QUARTER_y'], axis=1)
 
 # Add the evolution column
 df_7['EVOL'] = (df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1']
