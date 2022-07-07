@@ -239,7 +239,7 @@ selected_dept_list = st.multiselect("Please select the departments you want to s
 st.text(selected_dept_list)
 
 # Answer the question
-st.dataframe(execute_sf_query_table("select city_name, dept_code, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name order by avg_price desc limit 10'))
+st.dataframe(execute_sf_query_table("select city_name, dept_code, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name, dept_code order by avg_price desc limit 10'))
 
 # Don't run anything past here while troubleshooting
 st.stop()
