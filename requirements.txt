@@ -6,6 +6,6 @@ plotly-express
 geopandas
 geoviews
 xarray
-Proj
+pyproj
 geos
 cartopy
