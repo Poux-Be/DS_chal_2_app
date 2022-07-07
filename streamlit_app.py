@@ -127,7 +127,7 @@ st.dataframe(my_query_results)
 # Load the department informations
 df_departement=get_table('dept_info')
 
-st.text(type(df_departement['LAT'].to_list()[0])
+st.text(type(df_departement['LAT'].to_list()[0]))
 
 # Manual left join as pandas function don't seem to work - takes more time just to ensure we have the same order
 lat_list = []
