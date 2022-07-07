@@ -118,7 +118,7 @@ st.plotly_chart(fig2)
 st.header('Thrid query: Average price per squarred meter per department 💵')
 
 # Snowflake query
-my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc limit 10")
+my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
 #answer the exercise question
 st.dataframe(my_query_results)
