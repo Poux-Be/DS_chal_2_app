@@ -209,11 +209,11 @@ df_7['EVOL (%)'] = df_7['EVOL (%)'].astype(int)
 st.dataframe(df_7[df_7['EVOL (%)']>20])
 
 # ------------------------
-# Eighth exercise, get thesales number evolution
+# Eighth exercise, get the avergae price difference between appartments with 2 rooms and the ones with 3 rooms
 # ------------------------
 
 # Exercise title
-st.header('Eighth query: Departments with a high sales number increase between the first and the second semester 💸')
+st.header('Eighth query: Avergae price difference between appartments with 🥈 rooms and the ones with 🥉 rooms')
 
 # Answer the question
 two_rooms_avg_sqm_price = execute_sf_query_table("select avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view where rooms_number=2").values[0][0]
@@ -221,8 +221,8 @@ three_rooms_avg_sqm_price = execute_sf_query_table("select avg(transaction_value
 
 # Display the different average prices with metrics
 col1, col2 = st.columns(2)
-col1.metric("2-rooms 🏢🏢 avg sqm price", str(int(two_rooms_avg_sqm_price))+ " €")
-col2.metric("3-rooms 🏢🏢🏢 avg sqm price", str(int(three_rooms_avg_sqm_price))+ " €", str(100*round((three_rooms_avg_sqm_price-two_rooms_avg_sqm_price)/two_rooms_avg_sqm_price,2))+ " %")
+col1.metric("2-rooms 🥈 avg sqm price", str(int(two_rooms_avg_sqm_price))+ " €")
+col2.metric("3-rooms 🥉 avg sqm price", str(int(three_rooms_avg_sqm_price))+ " €", str(100*round((three_rooms_avg_sqm_price-two_rooms_avg_sqm_price)/two_rooms_avg_sqm_price,2))+ " %")
 
 
 
