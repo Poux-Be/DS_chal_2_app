@@ -119,7 +119,7 @@ st.plotly_chart(fig2)
 # ------------------------
 
 # Exercise title
-st.header('Thrid query: Average price per squarred meter per department 💵')
+st.header('Thrid query: Average squarred meter price per department 💵')
 # Snowflake query
 my_query_results = execute_sf_query_table("select dept_code, avg(transaction_value/carrez_surface) as avg_sqm_price from sales_view group by dept_code order by avg_sqm_price desc")
 
@@ -132,7 +132,9 @@ top = st.slider('How many departments do you want to see?', 0, len(my_query_resu
 
 #answer the exercise question
 st.dataframe(my_query_results[:top].set_index('DEPT_CODE'))
-st.bar_chart(my_query_results[:top].set_index('DEPT_CODE'), sort=False)
+fig3 = px.bar(my_query_results[:top], x="DEPT_CODE", y="AVG_SQM_PRICE", title="Average squarred meter price per department")
+fig3.show()
+st.plotly_chart(fig3)
 
 
 
