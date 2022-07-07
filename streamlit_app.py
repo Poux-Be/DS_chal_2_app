@@ -132,7 +132,7 @@ my_query_results['DEPT_CODE'] = my_query_results['DEPT_CODE'].astype(str)
 st.text(type(df_departement['INSEE_CODE'].to_list()[0]))
 st.text(type(my_query_results['DEPT_CODE'].to_list()[0]))
 
-my_query_results = my_query_results.join(df_departement.set_index('INSEE_CODE'), on='DEPT_CODE')
+my_query_results = pd.merge(my_query_results, df_departement, how='inner', left_on = 'DEPT_CODE', right_on = 'INSEE_CODE')
 
 #answer the exercise question
 st.dataframe(my_query_results)
