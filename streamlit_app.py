@@ -126,8 +126,6 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info')
-df_departement['INSEE_CODE'] = df_departement['INSEE_CODE'].astype(str)
-my_query_results['DEPT_CODE'] = my_query_results['DEPT_CODE'].astype(str)
 
 temp_list = df_departement['INSEE_CODE'].to_list()
 for x in my_query_results['DEPT_CODE'].to_list():
@@ -138,7 +136,7 @@ st.text(type(df_departement['INSEE_CODE'].to_list()[0]))
 st.text(type(my_query_results['DEPT_CODE'].to_list()[0]))
 st.text(temp_list)
 
-my_query_results = pd.merge(my_query_results, df_departement, how='outer', left_on = 'DEPT_CODE', right_on = 'INSEE_CODE')
+my_query_results = my_query_results.merge(df_departement, how='outer', left_on = 'DEPT_CODE', right_on = 'INSEE_CODE')
 
 #answer the exercise question
 st.dataframe(my_query_results)
