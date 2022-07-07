@@ -203,7 +203,7 @@ df_7 = df_7.drop(['T_QUARTER_x', 'T_QUARTER_y'], axis=1)
 df_7['SALES_COUNT_Q2'] = df_7['SALES_COUNT_Q2'].astype(int)
 
 # Add the evolution column
-df_7['EVOL'] = round(100*(df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],2)
+df_7['EVOL'] = 100*round((df_7['SALES_COUNT_Q2']-df_7['SALES_COUNT_Q1'])/ df_7['SALES_COUNT_Q1'],2)
 
 st.dataframe(df_7[df_7['EVOL']>20])
 
