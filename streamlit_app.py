@@ -126,6 +126,8 @@ st.dataframe(my_query_results)
 # Draw the map
 # Load the department informations
 df_departement=get_table('dept_info')
+df_departement['INSEE_CODE'] = df_departement['INSEE_CODE'].astype(str)
+my_query_results['DEPT_CODE'] = my_query_results['DEPT_CODE'].astype(str)
 
 st.text(type(df_departement['INSEE_CODE'].to_list()[0]))
 st.text(type(my_query_results['DEPT_CODE'].to_list()[0]))
