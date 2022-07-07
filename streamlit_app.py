@@ -174,9 +174,9 @@ st.dataframe(execute_sf_query_table("select transaction_value, street_number, st
 st.header('Sixth query: Sales number evolution 📈')
 
 # Answer the question
-first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<='2020-03-31'")
-second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31'")
-st.metric("1st semester",second_sem_sales_count, (second_sem_sales_count-first_sem_sales_count)/first_sem_sales_count)
+first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-04-01'")
+second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<'2020-08-01'")
+st.metric("Second semester sales number",second_sem_sales_count, (second_sem_sales_count-first_sem_sales_count)/first_sem_sales_count)
 
 # Don't run anything past here while troubleshooting
 st.stop()
