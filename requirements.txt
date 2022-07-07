@@ -6,6 +6,6 @@ plotly-express
 geopandas
 geoviews
 xarray
-libproj-dev proj-data proj-bin libgeos-dev
+proj-data
 geos
 cartopy
