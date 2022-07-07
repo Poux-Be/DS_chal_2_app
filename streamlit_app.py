@@ -160,7 +160,6 @@ if st.button('Display the average sqm price'):
 # Don't run anything past here while troubleshooting
 st.stop()
 
-
 #https://poux-be-first-st-app-st-app-6vwpjp.stapp.com/
 
 # old code to have a map
