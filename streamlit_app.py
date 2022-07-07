@@ -28,31 +28,10 @@ from urllib.error import URLError
 # Variables
 PATH = os.getcwd()
 
-# Read fruits list
-# my_fruit_list = pd.read_csv(PATH + "/resources/fruit_macros.csv")
-my_fruit_list = pd.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
-my_fruit_list = my_fruit_list.set_index('Fruit')
 
 # Functions
-# Get fruityvice data and put it in a dataframe
-def get_fruityvice_data(this_fruit_choice):
-    # Query Fruityvice and display the response code
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+this_fruit_choice)
-
-    # Normalize the fruityvice response in a dataframe
-    fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
-
-    return(fruityvice_normalized)
-
 # Fetch Snowflake data
 def get_table(table_name):
-    with my_cnx.cursor() as my_cur:
-        my_cur.execute("select * from "+table_name+" limit 20")
-        header = [x[0] for x in my_cur.description]
-        df = pd.DataFrame(my_cur.fetchall(), columns = header)
-        return (df)
-
-def get_table_with_conditions_on_(table_name):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("select * from "+table_name+" limit 20")
         header = [x[0] for x in my_cur.description]
