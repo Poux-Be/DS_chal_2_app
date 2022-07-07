@@ -177,8 +177,9 @@ st.header('Sixth query: Sales number evolution 📈')
 first_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-01-01' and transaction_date<'2020-03-31')").values[0][0]
 second_sem_sales_count = execute_sf_query_table("select count(*) from sales_view where (transaction_date>='2020-04-01' and transaction_date<='2020-07-31')").values[0][0]
 st.text(second_sem_sales_count)
+st.text(first_sem_sales_count)
 st.text(type(first_sem_sales_count))
-st.metric("Second semester sales number",second_sem_sales_count, (second_sem_sales_count-first_sem_sales_count))
+st.metric("Second semester sales number",second_sem_sales_count, (second_sem_sales_count - first_sem_sales_count))
 
 # ------------------------
 # Seventh exercise, get thesales number evolution
@@ -196,6 +197,8 @@ df_7_2 = df_7[df_7['T_QUARTER']==2]
 
 # Merge the dict again
 df_7 = df_7_2.merge(df_7_1, on='DEPT_CODE', how='left')
+
+df_7['EVOL'] = df_7_2['SALES_COUNT']/ df_7_1['SALES_COUNT']
 
 st.dataframe(df_7)
 # Don't run anything past here while troubleshooting
