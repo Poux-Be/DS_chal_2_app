@@ -144,8 +144,8 @@ st.plotly_chart(fig3)
 st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
 
 # Dept code input
-region_list = execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list()
-selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list, 'Ile-de-France')
+region_list = ['Ile-de-France'] + execute_sf_query_table("select distinct new_region from dept_info")['NEW_REGION'].to_list().pop('Ile-de-France')
+selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
 st.text(" Your selection: "+selected_region)
 
 if st.button('Display the average sqm price'):
