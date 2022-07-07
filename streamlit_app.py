@@ -128,12 +128,10 @@ st.dataframe(my_query_results)
 df_departement=get_table('dept_info')
 
 temp_list = df_departement['INSEE_CODE'].to_list()
-for x in my_query_results['DEPT_CODE'].to_list():
+for x in my_query_results['DEPT_CODE'].to_list()+['test']:
     if x not in temp_list:
         temp_list.append(x)
 
-st.text(type(df_departement['INSEE_CODE'].to_list()[0]))
-st.text(type(my_query_results['DEPT_CODE'].to_list()[0]))
 st.text(temp_list)
 
 my_query_results = my_query_results.merge(df_departement, how='left', left_on = 'DEPT_CODE', right_on = 'INSEE_CODE')
