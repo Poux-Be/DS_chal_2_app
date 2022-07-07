@@ -155,7 +155,7 @@ st.text(df_departement['INSEE_CODE'].to_list())
 #
 #df_departement = df_departement.rename({'INSEE_CODE': 'DEPT_CODE'}, axis=1)
 
-my_query_results = my_query_results.merge(df_departement, left_on=['INSEE_CODE'], right_on=['DEPT_CODE'], how='left')
+my_query_results = my_query_results.merge(df_departement, left_on=['DEPT_CODE'], right_on=['INSEE_CODE'], how='left')
 
 
 # Answer the exercise question
