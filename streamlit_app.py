@@ -125,8 +125,8 @@ st.dataframe(my_query_results)
 
 # Draw the map
 # Load the department informations
-df_departement=pd.read_excel('dept_info\\contours_departements.xlsx')
-my_query_results.join(df_departement.set_index('code_insee'), on='DEPT&_CODE')
+df_departement=get_table('dept_info')
+my_query_results.join(df_departement.set_index('code_insee'), on='DEPT_CODE')
 
 # Map initialisation
 map = folium.Map(location=[43.634, 1.433333],zoom_start=6)
