@@ -236,6 +236,7 @@ st.header('Ninth query: Average price of the 10 higher-priced cities in a multi-
 # Query the list of departments
 dept_list = execute_sf_query_table("select distinct dept_code from sales_view")['DEPT_CODE'].to_list()
 selected_dept_list = st.multiselect("Please select the departments you want to study", dept_list, default=['06', '13', '33', '59', '69'])
+st.text('you selected' + selected_dept_list)
 
 # Answer the question
 st.dataframe(execute_sf_query_table("select city_name, round(avg(transaction_value)) as avg_price from sales_view where dept_code in  ("+str(dept_list).replace('[','').replace(']','')+') group by city_name order by avg_price desc limit 10'))
