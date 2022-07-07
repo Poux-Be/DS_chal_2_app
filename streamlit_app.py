@@ -144,7 +144,7 @@ st.plotly_chart(fig3)
 st.header('Fourth query: Average squarred meter price for a department 🏡/🏢')
 
 # Dept code input
-region_list = execute_sf_query_table("select distinc new_region from dept_info").to_list()
+region_list = execute_sf_query_table("select distinct new_region from dept_info").to_list()
 selected_region = st.selectbox("Veuillez choisir la région dont vous voulez foir le prix moyen", region_list)
 
 # Snowflake query
