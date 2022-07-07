@@ -6,6 +6,6 @@ plotly-express
 geopandas
 geoviews
 xarray
+Proj
 geos
-Proj>=8.0.0
 cartopy
